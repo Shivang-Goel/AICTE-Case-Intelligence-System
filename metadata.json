@@ -1,0 +1,6 @@
+{
+  "name": "AICTE Institution-Centric Case Intelligence (SIH26264)",
+  "description": "Government-grade institutional case intelligence, AI-assisted cross-bureau conflict prevention, semantic case linking, and risk triage platform for AICTE.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

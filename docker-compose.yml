@@ -1,0 +1,54 @@
+version: '3.8'
+
+services:
+  db:
+    image: pgvector/pgvector:pg16
+    container_name: aicte_case_intel_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: aicte_user
+      POSTGRES_PASSWORD: aicte_secure_password_2026
+      POSTGRES_DB: aicte_case_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U aicte_user -d aicte_case_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: aicte_case_intel_backend
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgresql+asyncpg://aicte_user:aicte_secure_password_2026@db:5432/aicte_case_db
+      SECRET_KEY: aicte_secret_jwt_key_sih26264_production
+      ENVIRONMENT: production
+    ports:
+      - "8000:8000"
+
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: aicte_case_intel_frontend
+    restart: unless-stopped
+    environment:
+      PORT: 3000
+      NODE_ENV: production
+    ports:
+      - "3000:3000"
+      - "5173:3000"
+    depends_on:
+      - backend
+
+volumes:
+  pgdata:
