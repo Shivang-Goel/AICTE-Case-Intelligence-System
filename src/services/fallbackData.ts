@@ -475,3 +475,183 @@ export function getFallbackDashboardData(): DashboardData {
     recentCases: cases.slice(0, 5),
   };
 }
+
+export function getFallbackGraphData(): { nodes: any[]; edges: any[] } {
+  const nodes: any[] = [];
+  const edges: any[] = [];
+
+  // Institution Nodes
+  FALLBACK_INSTITUTIONS.forEach((inst, idx) => {
+    const x = 300 + (idx % 3) * 380;
+    const y = 250 + Math.floor(idx / 3) * 360;
+
+    nodes.push({
+      id: `inst-node-${inst.id}`,
+      type: 'institutionNode',
+      position: { x, y },
+      data: {
+        id: inst.id,
+        permanentId: inst.permanentId,
+        label: inst.name,
+        city: inst.city,
+        state: inst.state,
+        riskScore: inst.riskScore,
+        riskCategory: inst.riskCategory,
+        hasActiveConflict: inst.hasActiveConflict,
+        activeCasesCount: inst.activeCasesCount,
+      },
+    });
+  });
+
+  // Case Nodes
+  FALLBACK_CASES.forEach((c, idx) => {
+    const instNode = nodes.find(n => n.id === `inst-node-${c.institutionId}`);
+    const baseX = instNode ? instNode.position.x : 400;
+    const baseY = instNode ? instNode.position.y : 350;
+
+    const angle = (idx * 1.5) % (2 * Math.PI);
+    const radius = 200;
+    const x = baseX + Math.cos(angle) * radius;
+    const y = baseY + Math.sin(angle) * radius;
+
+    nodes.push({
+      id: `case-node-${c.id}`,
+      type: 'caseNode',
+      position: { x, y },
+      data: {
+        id: c.id,
+        caseNumber: c.caseNumber,
+        title: c.title,
+        bureauName: c.bureauName,
+        severityLevel: c.severityLevel,
+        status: c.status,
+      },
+    });
+
+    // Edge from Institution to Case
+    edges.push({
+      id: `edge-inst-${c.id}`,
+      source: `inst-node-${c.institutionId}`,
+      target: `case-node-${c.id}`,
+      animated: c.severityLevel === 'CRITICAL',
+      style: { stroke: c.severityLevel === 'CRITICAL' ? '#ef4444' : '#3b82f6', strokeWidth: 1.5 },
+      label: 'origin',
+    });
+  });
+
+  // Confirmed / Cross-Bureau links
+  edges.push({
+    id: 'edge-conflict-01',
+    source: 'case-node-case-01',
+    target: 'case-node-case-02',
+    animated: true,
+    style: { stroke: '#ef4444', strokeWidth: 2.5, strokeDasharray: '4,4' },
+    label: 'COLLISION: Safety vs Approval',
+  });
+
+  edges.push({
+    id: 'edge-suggest-01',
+    source: 'case-node-case-11',
+    target: 'case-node-case-12',
+    animated: false,
+    style: { stroke: '#10b981', strokeWidth: 2 },
+    label: 'Campus Proximity (Greater Noida)',
+  });
+
+  return { nodes, edges };
+}
+
+export const FALLBACK_AUDIT_LOGS: AuditLogEntry[] = [
+  {
+    id: 'aud-001',
+    timestamp: '2026-10-22T14:30:00Z',
+    actorId: 'usr-admin-1',
+    actorName: 'Dr. Arvind Sharma',
+    actorRole: 'ADMIN',
+    action: 'SYSTEM_AUDIT_VERIFIED',
+    entityType: 'SYSTEM',
+    entityId: 'SYS-2026-HQ',
+    entityReference: 'Regulatory Oversight Ledger',
+    details: 'Completed statutory triennial docket synchronization across all 5 autonomous AICTE bureaus.',
+    ipAddress: '10.20.4.12',
+  },
+  {
+    id: 'aud-002',
+    timestamp: '2026-10-21T11:45:00Z',
+    actorId: 'usr-officer-armc',
+    actorName: 'Shri Vikram Malhotra',
+    actorRole: 'BUREAU_OFFICER_ARMC',
+    action: 'SEVERITY_OVERRIDDEN',
+    entityType: 'CASE',
+    entityId: 'case-01',
+    entityReference: 'AICTE-2026-ARMC-0012',
+    details: 'Severity escalated to CRITICAL (98/100) under Mandatory Rule RULE-ARMC-01 following physical hazing report.',
+    ipAddress: '10.20.8.44',
+  },
+  {
+    id: 'aud-003',
+    timestamp: '2026-10-20T16:20:00Z',
+    actorId: 'usr-officer-ab',
+    actorName: 'Priya Ramanathan',
+    actorRole: 'BUREAU_OFFICER_AB',
+    action: 'STATUS_CHANGE',
+    entityType: 'CASE',
+    entityId: 'case-11',
+    entityReference: 'AICTE-2026-AB-0091',
+    details: 'Extension of Approval scrutiny status shifted to UNDER_REVIEW following high-performance GPU lab inspection.',
+    ipAddress: '10.20.2.19',
+  },
+  {
+    id: 'aud-004',
+    timestamp: '2026-10-19T09:15:00Z',
+    actorId: 'usr-officer-pgc',
+    actorName: 'Smt. Ananya Sen',
+    actorRole: 'BUREAU_OFFICER_PGC',
+    action: 'HEARING_CONVENED',
+    entityType: 'CASE',
+    entityId: 'case-12',
+    entityReference: 'AICTE-2026-PGC-0128',
+    details: 'Summoned institution administration and complainant student body for virtual conciliation session regarding caution deposit.',
+    ipAddress: '10.20.3.5',
+  },
+  {
+    id: 'aud-005',
+    timestamp: '2026-10-18T15:00:00Z',
+    actorId: 'usr-reviewer-1',
+    actorName: 'Rajesh Deshmukh',
+    actorRole: 'REVIEWER',
+    action: 'LINK_CONFIRMED',
+    entityType: 'RELATIONSHIP',
+    entityId: 'sug-01',
+    entityReference: 'Apex Institute Multi-Case Link',
+    details: 'Confirmed AI-suggested cross-bureau relation between Anti-Ragging investigation and Municipal Fire safety dispute.',
+    ipAddress: '10.20.9.31',
+  },
+];
+
+export function getFallbackSystemHealth(): any {
+  return {
+    status: 'OPERATIONAL',
+    platform: 'CaseSetu — AICTE Case Intelligence & Risk Assessment System',
+    version: '1.0.0',
+    problemStatement: 'SIH26264',
+    timestamp: new Date().toISOString(),
+    database: {
+      status: 'ACTIVE_PERSISTENT',
+      type: 'PostgreSQL + Persistent In-Memory DataStore',
+      casesCount: FALLBACK_CASES.length,
+      institutionsCount: FALLBACK_INSTITUTIONS.length,
+    },
+    performance: {
+      uptimeSeconds: 86420,
+      heapUsedMb: 68,
+      rssMb: 142,
+    },
+    intelligenceEngine: {
+      nlpEngine: 'Deterministic Jaccard & N-Gram Keyword Vectorizer + Sentence Transformer Fallback',
+      fallbackStatus: 'ONLINE (Deterministic Zero-Cost Fallback Ready)',
+      severityEngine: 'Configurable Rule-Based Urgency Engine (Rules ARMC-01, AB-04, VIB-02 Active)',
+    },
+  };
+}
+

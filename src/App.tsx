@@ -1,5 +1,5 @@
 /**
- * AICTE Case Intelligence & Risk Assessment System
+ * CaseSetu — AICTE Case Intelligence & Risk Assessment System
  * Main React Application Shell
  */
 
@@ -49,14 +49,33 @@ function MainLayout({
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const location = useLocation();
 
-  // If on login route, render login page in standalone full-screen mode
-  if (location.pathname === '/login') {
+  const hasToken = Boolean(localStorage.getItem('aicte_auth_token'));
+  const isCitizenPortal = location.pathname.startsWith('/citizen-portal');
+  const isLoginPage = location.pathname === '/login';
+
+  // If citizen portal is requested, allow public access
+  if (isCitizenPortal) {
+    return (
+      <div className="min-h-screen bg-[#080d1a] text-slate-100">
+        <CitizenPortalPage />
+      </div>
+    );
+  }
+
+  // If user is not logged in, enforce login page
+  if (!hasToken || !currentUser) {
     return (
       <Routes>
         <Route path="/login" element={<LoginPage onLoginSuccess={loadUserAndBadges} />} />
+        <Route path="/citizen-portal" element={<CitizenPortalPage />} />
         <Route path="*" element={<Navigate to="/login" replace />} />
       </Routes>
     );
+  }
+
+  // If already logged in and visiting /login, redirect to dashboard
+  if (isLoginPage) {
+    return <Navigate to="/dashboard" replace />;
   }
 
   const unreadNotificationsCount = notifications.filter(n => !n.read).length;
@@ -95,9 +114,7 @@ function MainLayout({
         <main className="flex-1 pt-20 px-6 pb-12 max-w-7xl w-full mx-auto">
           <Routes>
             <Route path="/" element={<Navigate to="/dashboard" replace />} />
-            <Route path="/login" element={<LoginPage onLoginSuccess={loadUserAndBadges} />} />
             <Route path="/dashboard" element={<DashboardPage currentUser={currentUser} onRefresh={loadUserAndBadges} />} />
-            <Route path="/citizen-portal" element={<CitizenPortalPage />} />
             <Route path="/cases" element={<CasesPage />} />
             <Route path="/cases/:id" element={<CaseDetailPage />} />
             <Route path="/intake" element={<ComplaintIntakePage />} />
@@ -126,6 +143,7 @@ export default function App() {
   const [activeConflictsCount, setActiveConflictsCount] = useState(0);
   const [urgentSafetyCount, setUrgentSafetyCount] = useState(0);
   const [pendingSuggestionsCount, setPendingSuggestionsCount] = useState(0);
+  const [initialLoading, setInitialLoading] = useState(true);
 
   useEffect(() => {
     loadUserAndBadges();
@@ -133,20 +151,25 @@ export default function App() {
 
   const loadUserAndBadges = async () => {
     try {
-      const [userRes, dashRes, notifRes, sugRes] = await Promise.all([
-        api.getCurrentUser(),
-        api.getDashboardData(),
-        api.getNotifications(),
-        api.getSuggestions('PENDING_REVIEW'),
-      ]);
-
+      const userRes = await api.getCurrentUser();
       setCurrentUser(userRes.user);
-      setActiveConflictsCount(dashRes.kpis.activeConflicts);
-      setUrgentSafetyCount(dashRes.kpis.criticalCases);
-      setPendingSuggestionsCount(sugRes.suggestions.length);
-      setNotifications(notifRes.notifications);
+
+      if (userRes.user) {
+        const [dashRes, notifRes, sugRes] = await Promise.all([
+          api.getDashboardData(),
+          api.getNotifications(),
+          api.getSuggestions('PENDING_REVIEW'),
+        ]);
+
+        setActiveConflictsCount(dashRes.kpis.activeConflicts);
+        setUrgentSafetyCount(dashRes.kpis.criticalCases);
+        setPendingSuggestionsCount(sugRes.suggestions.length);
+        setNotifications(notifRes.notifications);
+      }
     } catch (e) {
       console.warn('Initial telemetry load warning:', e);
+    } finally {
+      setInitialLoading(false);
     }
   };
 
@@ -160,6 +183,17 @@ export default function App() {
       console.error(e);
     }
   };
+
+  if (initialLoading) {
+    return (
+      <div className="min-h-screen bg-[#080d1a] flex items-center justify-center text-slate-400">
+        <div className="flex flex-col items-center space-y-3">
+          <div className="w-8 h-8 rounded-full border-2 border-blue-500 border-t-transparent animate-spin" />
+          <p className="text-xs font-semibold tracking-wider text-slate-300 uppercase">Connecting to CaseSetu Secure Portal...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <BrowserRouter>
