@@ -952,6 +952,7 @@ apiRouter.get('/graph', (req: Request, res: Response) => {
         severityLevel: c.severityLevel,
         status: c.status,
         isSafetyUrgent: c.isSafetyUrgent,
+        assignedOfficer: c.assignedOfficer,
       },
     });
 

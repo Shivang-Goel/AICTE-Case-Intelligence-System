@@ -273,14 +273,36 @@ export const CitizenPortalPage: React.FC = () => {
             </p>
           </div>
 
-          {/* Emergency 24x7 Hotline card */}
-          <div className="bg-slate-950/80 border border-red-500/40 rounded-xl p-3.5 text-xs text-slate-300 flex-shrink-0 space-y-1 shadow-lg">
-            <div className="flex items-center space-x-2 text-red-400 font-bold uppercase tracking-wider text-[11px]">
-              <PhoneCall className="w-4 h-4 animate-bounce" />
-              <span>24x7 Anti-Ragging Helpline</span>
+          {/* Portal Switcher & Hotline cards */}
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 flex-shrink-0">
+            <div className="bg-slate-900 border border-blue-500/40 rounded-xl p-3 text-xs flex flex-col justify-center space-y-2 shadow-lg">
+              <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Regulatory Access:</span>
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={() => navigate('/dashboard')}
+                  className="px-3 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs flex items-center space-x-1.5 shadow transition"
+                >
+                  <span>🏛️ Council Hub</span>
+                </button>
+                <button
+                  onClick={() => navigate('/login')}
+                  className="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-bold text-xs flex items-center space-x-1.5 transition"
+                >
+                  <User className="w-3.5 h-3.5 text-blue-400" />
+                  <span>Switch Officer</span>
+                </button>
+              </div>
             </div>
-            <p className="text-base font-black text-white font-mono">1800-180-5522</p>
-            <p className="text-[10px] text-slate-400">Toll-Free National Emergency Response</p>
+
+            {/* Emergency 24x7 Hotline card */}
+            <div className="bg-slate-950/80 border border-red-500/40 rounded-xl p-3 text-xs text-slate-300 flex-shrink-0 space-y-1 shadow-lg">
+              <div className="flex items-center space-x-2 text-red-400 font-bold uppercase tracking-wider text-[11px]">
+                <PhoneCall className="w-4 h-4 animate-bounce" />
+                <span>24x7 Anti-Ragging Helpline</span>
+              </div>
+              <p className="text-base font-black text-white font-mono">1800-180-5522</p>
+              <p className="text-[10px] text-slate-400">Toll-Free National Response</p>
+            </div>
           </div>
         </div>
 

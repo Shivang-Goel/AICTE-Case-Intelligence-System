@@ -429,6 +429,11 @@ export const TopNav: React.FC<Props> = ({
                       onClick={() => {
                         onRoleChange(role.key, role.userId);
                         setRoleDropdownOpen(false);
+                        if (role.key === 'CITIZEN') {
+                          navigate('/citizen-portal');
+                        } else {
+                          navigate('/dashboard');
+                        }
                       }}
                       className={`w-full text-left p-2 rounded-lg text-xs transition flex items-start justify-between ${
                         isActive

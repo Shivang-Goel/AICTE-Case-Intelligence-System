@@ -53,11 +53,26 @@ function MainLayout({
   const isCitizenPortal = location.pathname.startsWith('/citizen-portal');
   const isLoginPage = location.pathname === '/login';
 
-  // If citizen portal is requested, allow public access
+  // Always redirect root / to /login so the login page opens by default
+  if (location.pathname === '/') {
+    return <Navigate to="/login" replace />;
+  }
+
+  // If citizen portal is requested, render with TopNav so users can switch profiles anytime
   if (isCitizenPortal) {
     return (
-      <div className="min-h-screen bg-[#080d1a] text-slate-100">
-        <CitizenPortalPage />
+      <div className="min-h-screen bg-[#080d1a] text-slate-100 flex flex-col">
+        <TopNav
+          currentUser={currentUser}
+          onRoleChange={onRoleChange}
+          notifications={notifications}
+          onRefreshNotifications={loadUserAndBadges}
+          collapsed={true}
+          onToggleSidebar={() => {}}
+        />
+        <main className="flex-1 pt-20 px-6 pb-12 max-w-7xl w-full mx-auto">
+          <CitizenPortalPage />
+        </main>
       </div>
     );
   }
@@ -73,9 +88,9 @@ function MainLayout({
     );
   }
 
-  // If already logged in and visiting /login, redirect to dashboard
+  // If on /login route, render login page
   if (isLoginPage) {
-    return <Navigate to="/dashboard" replace />;
+    return <LoginPage onLoginSuccess={loadUserAndBadges} />;
   }
 
   const unreadNotificationsCount = notifications.filter(n => !n.read).length;
