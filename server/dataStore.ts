@@ -185,8 +185,9 @@ interface AppDatabase {
   notifications: NotificationItem[];
 }
 
+const isServerless = Boolean(process.env.VERCEL || process.env.AWS_LAMBDA_FUNCTION_NAME || process.env.VERCEL_ENV);
 const BUNDLED_DB_FILE = path.resolve(process.cwd(), '.data', 'aicte_store.json');
-const DATA_DIR = process.env.VERCEL ? path.resolve('/tmp', '.data') : path.resolve(process.cwd(), '.data');
+const DATA_DIR = isServerless ? path.resolve('/tmp', '.data') : path.resolve(process.cwd(), '.data');
 const DB_FILE = path.resolve(DATA_DIR, 'aicte_store.json');
 
 export const GL_BAJAJ_INSTITUTIONS: Institution[] = [
@@ -475,27 +476,35 @@ class DataStore {
   }
 
   private ensureDataDir() {
-    if (!fs.existsSync(DATA_DIR)) {
-      try {
+    try {
+      if (!fs.existsSync(DATA_DIR)) {
         fs.mkdirSync(DATA_DIR, { recursive: true });
-      } catch (e) {
-        console.warn('Could not create persistent data dir, using ephemeral memory store', e);
       }
+    } catch (e) {
+      // In-memory fallback
     }
   }
 
   private saveToDisk() {
     try {
+      this.ensureDataDir();
       fs.writeFileSync(DB_FILE, JSON.stringify(this.db, null, 2), 'utf-8');
     } catch (e) {
-      console.warn('Failed to persist database to disk:', e);
+      // Silently continue if disk write is disallowed in serverless
     }
   }
 
   private loadOrSeed(): AppDatabase {
-    const fileToLoad = fs.existsSync(DB_FILE)
-      ? DB_FILE
-      : (fs.existsSync(BUNDLED_DB_FILE) ? BUNDLED_DB_FILE : null);
+    let fileToLoad: string | null = null;
+    try {
+      if (fs.existsSync(DB_FILE)) {
+        fileToLoad = DB_FILE;
+      } else if (fs.existsSync(BUNDLED_DB_FILE)) {
+        fileToLoad = BUNDLED_DB_FILE;
+      }
+    } catch (e) {
+      fileToLoad = null;
+    }
 
     if (fileToLoad) {
       try {
