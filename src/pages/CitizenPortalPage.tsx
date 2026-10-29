@@ -251,7 +251,7 @@ export const CitizenPortalPage: React.FC = () => {
   const selectedInst = institutions.find(i => i.id === institutionId);
 
   return (
-    <div className="space-y-6 max-w-6xl mx-auto">
+    <div className="space-y-6 max-w-6xl mx-auto pb-16">
       {/* Citizen Portal Hero Banner */}
       <div className="bg-gradient-to-r from-blue-950 via-slate-900 to-indigo-950 border border-blue-500/40 rounded-2xl p-6 shadow-2xl relative overflow-hidden">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
@@ -266,10 +266,10 @@ export const CitizenPortalPage: React.FC = () => {
               </span>
             </div>
             <h1 className="text-2xl font-extrabold text-white tracking-tight">
-              AICTE National Public Grievance & Student Welfare Portal
+              CaseSetu — National Student & Citizen Grievance Portal
             </h1>
             <p className="text-xs text-slate-300 max-w-2xl leading-relaxed">
-              Direct access for students, parents, faculty, and citizens to lodge institutional grievances, report hazing/safety hazards, and track official statutory investigation milestones.
+              Official statutory bridge for students, parents, faculty, and citizens to lodge institutional grievances, report hazing/safety hazards, and track official statutory investigation milestones under AICTE.
             </p>
           </div>
 
@@ -284,14 +284,14 @@ export const CitizenPortalPage: React.FC = () => {
           </div>
         </div>
 
-        {/* Portal Tabs */}
-        <div className="flex flex-wrap items-center gap-2 pt-6 mt-4 border-t border-slate-800 text-xs">
+        {/* Portal Tabs Menu */}
+        <div className="flex flex-wrap sm:flex-nowrap items-center gap-2 pt-6 mt-4 border-t border-slate-800 text-xs overflow-x-auto pb-1.5 custom-nav-scroll">
           <button
             onClick={() => {
               setActiveTab('SUBMIT');
               setSubmissionSuccess(null);
             }}
-            className={`flex items-center space-x-2 px-4 py-2 rounded-xl font-bold transition shadow ${
+            className={`flex items-center space-x-2 px-4 py-2 rounded-xl font-bold transition shadow flex-shrink-0 ${
               activeTab === 'SUBMIT'
                 ? 'bg-blue-600 text-white shadow-blue-600/30'
                 : 'bg-slate-900/90 text-slate-300 hover:bg-slate-800'
@@ -303,7 +303,7 @@ export const CitizenPortalPage: React.FC = () => {
 
           <button
             onClick={() => setActiveTab('TRACK')}
-            className={`flex items-center space-x-2 px-4 py-2 rounded-xl font-bold transition shadow ${
+            className={`flex items-center space-x-2 px-4 py-2 rounded-xl font-bold transition shadow flex-shrink-0 ${
               activeTab === 'TRACK'
                 ? 'bg-blue-600 text-white shadow-blue-600/30'
                 : 'bg-slate-900/90 text-slate-300 hover:bg-slate-800'
@@ -315,7 +315,7 @@ export const CitizenPortalPage: React.FC = () => {
 
           <button
             onClick={() => setActiveTab('MY_CASES')}
-            className={`flex items-center space-x-2 px-4 py-2 rounded-xl font-bold transition shadow ${
+            className={`flex items-center space-x-2 px-4 py-2 rounded-xl font-bold transition shadow flex-shrink-0 ${
               activeTab === 'MY_CASES'
                 ? 'bg-blue-600 text-white shadow-blue-600/30'
                 : 'bg-slate-900/90 text-slate-300 hover:bg-slate-800'
@@ -327,7 +327,7 @@ export const CitizenPortalPage: React.FC = () => {
 
           <button
             onClick={() => setActiveTab('RIGHTS')}
-            className={`flex items-center space-x-2 px-4 py-2 rounded-xl font-bold transition shadow ${
+            className={`flex items-center space-x-2 px-4 py-2 rounded-xl font-bold transition shadow flex-shrink-0 ${
               activeTab === 'RIGHTS'
                 ? 'bg-blue-600 text-white shadow-blue-600/30'
                 : 'bg-slate-900/90 text-slate-300 hover:bg-slate-800'

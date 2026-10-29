@@ -185,8 +185,286 @@ interface AppDatabase {
   notifications: NotificationItem[];
 }
 
-const DATA_DIR = path.resolve(process.cwd(), '.data');
+const BUNDLED_DB_FILE = path.resolve(process.cwd(), '.data', 'aicte_store.json');
+const DATA_DIR = process.env.VERCEL ? path.resolve('/tmp', '.data') : path.resolve(process.cwd(), '.data');
 const DB_FILE = path.resolve(DATA_DIR, 'aicte_store.json');
+
+export const GL_BAJAJ_INSTITUTIONS: Institution[] = [
+  {
+    id: 'inst-glb-itm',
+    permanentId: 'AICTE-1-4648711',
+    name: 'G.L. Bajaj Institute of Technology and Management',
+    state: 'Uttar Pradesh',
+    city: 'Greater Noida',
+    address: 'Plot No. 2, Knowledge Park III, Greater Noida, Gautam Buddha Nagar, Uttar Pradesh 201306',
+    type: 'Engineering & Technology Institute',
+    establishedYear: 2005,
+    approvedIntake: 1440,
+    riskScore: 38,
+    riskCategory: 'LOW',
+    activeCasesCount: 1,
+    totalComplaintsCount: 2,
+    hasActiveConflict: false,
+    naacGrade: 'A+',
+    nbaAccredited: true,
+  },
+  {
+    id: 'inst-glb-imr',
+    permanentId: 'AICTE-1-1378121',
+    name: 'G.L. Bajaj Institute of Management and Research (GLBIMR)',
+    state: 'Uttar Pradesh',
+    city: 'Greater Noida',
+    address: 'Plot No. 2, Knowledge Park III, Greater Noida, Gautam Buddha Nagar, Uttar Pradesh 201306',
+    type: 'Management Institute (Autonomous PGDM & MBA)',
+    establishedYear: 2007,
+    approvedIntake: 300,
+    riskScore: 24,
+    riskCategory: 'LOW',
+    activeCasesCount: 1,
+    totalComplaintsCount: 1,
+    hasActiveConflict: false,
+    naacGrade: 'A',
+    nbaAccredited: true,
+  },
+  {
+    id: 'inst-glb-med',
+    permanentId: 'AICTE-1-98721450',
+    name: 'GL Bajaj Institute of Medical Sciences & Research',
+    state: 'Uttar Pradesh',
+    city: 'Mathura',
+    address: 'National Highway 2 (NH-2), Akbarpur, Chhata, Mathura, Uttar Pradesh 281406',
+    type: 'Medical Sciences & Clinical Research Institute',
+    establishedYear: 2021,
+    approvedIntake: 150,
+    riskScore: 29,
+    riskCategory: 'LOW',
+    activeCasesCount: 1,
+    totalComplaintsCount: 1,
+    hasActiveConflict: false,
+    naacGrade: 'A',
+    nbaAccredited: false,
+  },
+  {
+    id: 'inst-glb-law',
+    permanentId: 'AICTE-1-76492015',
+    name: 'GL Bajaj Institute of Law',
+    state: 'Uttar Pradesh',
+    city: 'Greater Noida',
+    address: 'Plot No. 2, Knowledge Park III, Institutional Area, Greater Noida, Uttar Pradesh 201306',
+    type: 'Law & Integrated Governance Institute',
+    establishedYear: 2020,
+    approvedIntake: 240,
+    riskScore: 18,
+    riskCategory: 'LOW',
+    activeCasesCount: 0,
+    totalComplaintsCount: 1,
+    hasActiveConflict: false,
+    naacGrade: 'B++',
+    nbaAccredited: false,
+  },
+];
+
+export const GL_BAJAJ_CASES: ComplaintCase[] = [
+  {
+    id: 'case-11',
+    caseNumber: 'AICTE-2026-AB-0091',
+    trackingToken: 'AICTE-GRV-2026-9102',
+    title: 'Annual Extension of Approval (EoA) verification for 60-seat Artificial Intelligence & Data Science expansion',
+    description: 'Scrutiny of EoA application for 2026-27 session requesting 60 additional seats in B.Tech Computer Science & Engineering (AI & ML / Data Science) specialization. High-performance GPU computing lab infrastructure and AICTE Faculty cadre ratio under verification.',
+    institutionId: 'inst-glb-itm',
+    institutionName: 'G.L. Bajaj Institute of Technology and Management',
+    permanentId: 'AICTE-1-4648711',
+    bureauId: 'bur-ab',
+    bureauName: 'Approval Bureau',
+    category: 'UNAPPROVED_PROGRAM',
+    submissionDate: '2026-10-16T10:15:00Z',
+    source: 'AICTE_PORTAL',
+    complainantType: 'OFFICIAL_AUDITOR',
+    severityLevel: 'NORMAL',
+    severityScore: 36,
+    severityReason: 'Routine EoA expansion audit requiring laboratory and faculty verification before sanction order.',
+    severityRuleMatched: 'RULE-AB-01: Standard scrutiny for sanctioned intake expansion under APH Chapter II.',
+    isSafetyUrgent: false,
+    status: 'UNDER_REVIEW',
+    assignedOfficer: 'Priya Ramanathan',
+    assignedOfficerEmail: 'officer.ab@aicte-india.org',
+    priority: 'MEDIUM',
+    deadlineDate: '2026-11-08T18:00:00Z',
+    nextAction: 'Review physical inspection report of high-performance GPU server lab from Northern Regional Office.',
+    linkedCaseIds: [],
+    actions: [
+      {
+        id: 'act-11-1',
+        caseId: 'case-11',
+        timestamp: '2026-10-16T10:15:00Z',
+        actorName: 'Priya Ramanathan',
+        actorRole: 'BUREAU_OFFICER',
+        actionType: 'CASE_CREATED',
+        description: 'Scrutiny dossier initiated for GLBITM AI & Data Science expansion.',
+      },
+    ],
+    tags: ['GLBITM', 'Intake Expansion', 'AI/ML Lab', 'Greater Noida', 'AKTU'],
+    lastUpdated: '2026-10-20T14:00:00Z',
+  },
+  {
+    id: 'case-12',
+    caseNumber: 'AICTE-2026-PGC-0128',
+    trackingToken: 'AICTE-GRV-2026-9128',
+    title: 'Student grievance regarding summer internship corporate stipend transparency and refund of security deposit',
+    description: 'PGDM Batch 2025-27 student representation requesting clarification regarding corporate internship placement processing charges and prompt release of annual library security deposit upon course completion.',
+    institutionId: 'inst-glb-imr',
+    institutionName: 'G.L. Bajaj Institute of Management and Research (GLBIMR)',
+    permanentId: 'AICTE-1-1378121',
+    bureauId: 'bur-pgc',
+    bureauName: 'Public Grievance Cell',
+    category: 'FEE_EXTORTION',
+    submissionDate: '2026-10-14T14:30:00Z',
+    source: 'STUDENT_GRIEVANCE_CELL',
+    complainantType: 'STUDENT',
+    severityLevel: 'TIME_SENSITIVE',
+    severityScore: 60,
+    severityReason: 'Time-sensitive student grievance regarding institutional fee deposit returns and placement overhead policies.',
+    severityRuleMatched: 'RULE-PGC-02: Mandatory admission caution and library deposit refund within 15 working days.',
+    isSafetyUrgent: false,
+    status: 'HEARING_SCHEDULED',
+    assignedOfficer: 'Smt. Ananya Sen',
+    assignedOfficerEmail: 'officer.pgc@aicte-india.org',
+    priority: 'URGENT',
+    deadlineDate: '2026-10-29T17:00:00Z',
+    nextAction: 'Convene virtual mediation meeting with Dean of Student Affairs and Complainant.',
+    linkedCaseIds: [],
+    actions: [
+      {
+        id: 'act-12-1',
+        caseId: 'case-12',
+        timestamp: '2026-10-14T14:30:00Z',
+        actorName: 'System Gateway',
+        actorRole: 'SYSTEM',
+        actionType: 'CASE_CREATED',
+        description: 'Grievance submitted via Student Grievance Portal.',
+      },
+      {
+        id: 'act-12-2',
+        caseId: 'case-12',
+        timestamp: '2026-10-18T11:00:00Z',
+        actorName: 'Smt. Ananya Sen',
+        actorRole: 'BUREAU_OFFICER',
+        actionType: 'STATUS_CHANGE',
+        description: 'Scheduled conciliation session with GLBIMR administration.',
+        previousValue: 'UNDER_REVIEW',
+        newValue: 'HEARING_SCHEDULED',
+      },
+    ],
+    tags: ['GLBIMR', 'PGDM', 'Security Deposit', 'Fee Policy', 'Greater Noida'],
+    lastUpdated: '2026-10-21T15:20:00Z',
+  },
+  {
+    id: 'case-13',
+    caseNumber: 'AICTE-2026-ARMC-0034',
+    trackingToken: 'AICTE-GRV-2026-9145',
+    title: 'Preventive anti-ragging squad surprise hostel audit and senior-junior interaction verification',
+    description: 'Proactive compliance audit of newly commissioned residential student hostel blocks at Mathura campus. Verification of 24/7 CCTV surveillance, biometric access gates, and display of National Anti-Ragging Helpline toll-free posters in all common rooms.',
+    institutionId: 'inst-glb-med',
+    institutionName: 'GL Bajaj Institute of Medical Sciences & Research',
+    permanentId: 'AICTE-1-98721450',
+    bureauId: 'bur-armc',
+    bureauName: 'Anti-Ragging Monitoring Cell',
+    category: 'SAFETY_RAGGING',
+    submissionDate: '2026-10-11T09:00:00Z',
+    source: 'NATIONAL_ANTI_RAGGING_HELPLINE',
+    complainantType: 'OFFICIAL_AUDITOR',
+    severityLevel: 'NORMAL',
+    severityScore: 38,
+    severityReason: 'Routine preventive inspection; no active physical harassment reported.',
+    severityRuleMatched: 'RULE-ARMC-03: Mandatory pre-semester campus and hostel safety audit.',
+    isSafetyUrgent: false,
+    status: 'ACTION_TAKEN',
+    assignedOfficer: 'Prof. M. K. Narang',
+    assignedOfficerEmail: 'narang.armc@aicte-india.org',
+    priority: 'ROUTINE',
+    deadlineDate: '2026-10-31T18:00:00Z',
+    nextAction: 'Archived inspection certificate; hostel premises found fully compliant with biometric gate logs.',
+    linkedCaseIds: [],
+    resolutionNotes: 'Inspection squad confirmed CCTV operational and Anti-Ragging Committee constituted with external civil society members.',
+    actions: [
+      {
+        id: 'act-13-1',
+        caseId: 'case-13',
+        timestamp: '2026-10-11T09:00:00Z',
+        actorName: 'Prof. M. K. Narang',
+        actorRole: 'BUREAU_OFFICER',
+        actionType: 'CASE_CREATED',
+        description: 'Routine hostel inspection docket initiated.',
+      },
+      {
+        id: 'act-13-2',
+        caseId: 'case-13',
+        timestamp: '2026-10-19T16:00:00Z',
+        actorName: 'Prof. M. K. Narang',
+        actorRole: 'BUREAU_OFFICER',
+        actionType: 'STATUS_CHANGE',
+        description: 'Inspection satisfactory. Action recorded.',
+        previousValue: 'UNDER_REVIEW',
+        newValue: 'ACTION_TAKEN',
+      },
+    ],
+    tags: ['GL Bajaj Medical', 'Mathura Campus', 'Anti-Ragging Squad', 'Hostel Audit'],
+    lastUpdated: '2026-10-19T16:15:00Z',
+  },
+  {
+    id: 'case-14',
+    caseNumber: 'AICTE-2026-PGC-0135',
+    trackingToken: 'AICTE-GRV-2026-9150',
+    title: 'Moot Court infrastructure and e-library legal database subscription enhancement request',
+    description: 'Student bar council petition requesting expanded access to SCC Online and Manupatra databases across academic terminals. College administration procured institutional enterprise multi-user license.',
+    institutionId: 'inst-glb-law',
+    institutionName: 'GL Bajaj Institute of Law',
+    permanentId: 'AICTE-1-76492015',
+    bureauId: 'bur-pgc',
+    bureauName: 'Public Grievance Cell',
+    category: 'INFRASTRUCTURE_DEFICIT',
+    submissionDate: '2026-10-04T12:00:00Z',
+    source: 'STUDENT_GRIEVANCE_CELL',
+    complainantType: 'STUDENT',
+    severityLevel: 'NORMAL',
+    severityScore: 22,
+    severityReason: 'Academic library resource query resolved cordially by institution.',
+    severityRuleMatched: 'RULE-PGC-01: Standard student academic infrastructure petition.',
+    isSafetyUrgent: false,
+    status: 'CLOSED',
+    assignedOfficer: 'Smt. Ananya Sen',
+    assignedOfficerEmail: 'officer.pgc@aicte-india.org',
+    priority: 'ROUTINE',
+    deadlineDate: '2026-10-25T17:00:00Z',
+    nextAction: 'Closed upon receipt of enterprise legal software license purchase invoice.',
+    linkedCaseIds: [],
+    resolutionNotes: 'College administration submitted proof of 100-seat multi-user remote VPN access for legal databases; closed satisfactorily.',
+    actions: [
+      {
+        id: 'act-14-1',
+        caseId: 'case-14',
+        timestamp: '2026-10-04T12:00:00Z',
+        actorName: 'System Gateway',
+        actorRole: 'SYSTEM',
+        actionType: 'CASE_CREATED',
+        description: 'Student petition registered.',
+      },
+      {
+        id: 'act-14-2',
+        caseId: 'case-14',
+        timestamp: '2026-10-15T10:30:00Z',
+        actorName: 'Smt. Ananya Sen',
+        actorRole: 'BUREAU_OFFICER',
+        actionType: 'STATUS_CHANGE',
+        description: 'Verified compliance and closed grievance.',
+        previousValue: 'UNDER_REVIEW',
+        newValue: 'CLOSED',
+      },
+    ],
+    tags: ['GL Bajaj Law', 'Library Resources', 'Moot Court', 'Greater Noida'],
+    lastUpdated: '2026-10-15T11:00:00Z',
+  },
+];
 
 class DataStore {
   private db: AppDatabase;
@@ -215,9 +493,13 @@ class DataStore {
   }
 
   private loadOrSeed(): AppDatabase {
-    if (fs.existsSync(DB_FILE)) {
+    const fileToLoad = fs.existsSync(DB_FILE)
+      ? DB_FILE
+      : (fs.existsSync(BUNDLED_DB_FILE) ? BUNDLED_DB_FILE : null);
+
+    if (fileToLoad) {
       try {
-        const raw = fs.readFileSync(DB_FILE, 'utf-8');
+        const raw = fs.readFileSync(fileToLoad, 'utf-8');
         const parsed = JSON.parse(raw);
         if (parsed.cases && parsed.institutions && parsed.users) {
           // Ensure trackingToken on all cases
@@ -264,6 +546,8 @@ class DataStore {
             }
           });
 
+          let dirty = false;
+
           // Ensure citizen user exists
           if (!parsed.users.some((u: any) => u.role === 'CITIZEN')) {
             parsed.users.push({
@@ -273,7 +557,39 @@ class DataStore {
               role: 'CITIZEN',
               designation: 'Enrolled B.Tech Student (Complainant / Citizen)',
             });
+            dirty = true;
           }
+
+          const reviewerUser = parsed.users.find((u: any) => u.id === 'usr-reviewer-1' || u.role === 'REVIEWER');
+          if (reviewerUser && reviewerUser.bureauId !== 'bur-ombudsman') {
+            reviewerUser.bureauId = 'bur-ombudsman';
+            reviewerUser.bureauName = 'AI Intelligence & Ombudsman Docket';
+            dirty = true;
+          }
+
+          // Ensure GL Bajaj institutions and cases exist
+          GL_BAJAJ_INSTITUTIONS.forEach(gi => {
+            if (!parsed.institutions.some((i: any) => i.id === gi.id || i.permanentId === gi.permanentId)) {
+              parsed.institutions.push(gi);
+              dirty = true;
+            }
+          });
+
+          GL_BAJAJ_CASES.forEach(gc => {
+            if (!parsed.cases.some((c: any) => c.id === gc.id || c.caseNumber === gc.caseNumber)) {
+              parsed.cases.push(gc);
+              dirty = true;
+            }
+          });
+
+          if (dirty) {
+            try {
+              fs.writeFileSync(DB_FILE, JSON.stringify(parsed, null, 2), 'utf-8');
+            } catch (e) {
+              console.warn('Could not sync merged data to disk:', e);
+            }
+          }
+
           return parsed;
         }
       } catch (e) {
@@ -333,8 +649,8 @@ class DataStore {
         name: 'Rajesh Deshmukh',
         email: 'reviewer@aicte-india.org',
         role: 'REVIEWER',
-        bureauId: 'bur-vig',
-        bureauName: 'Vigilance & Inspection Bureau',
+        bureauId: 'bur-ombudsman',
+        bureauName: 'AI Intelligence & Ombudsman Docket',
         designation: 'Lead Intelligence Reviewer & Ombudsman',
       },
       {
@@ -505,6 +821,7 @@ class DataStore {
         naacGrade: 'A++',
         nbaAccredited: true,
       },
+      ...GL_BAJAJ_INSTITUTIONS,
     ];
 
     const cases: ComplaintCase[] = [
@@ -986,6 +1303,7 @@ class DataStore {
         tags: ['Accreditation', 'Fast-Track', 'Hyderabad'],
         lastUpdated: '2026-10-10T11:30:00Z',
       },
+      ...GL_BAJAJ_CASES,
     ];
 
     const suggestions: CaseRelationshipSuggestion[] = [

@@ -72,11 +72,24 @@ class ApiService {
     return this.request<{ user: User }>('/auth/me');
   }
 
-  public async login(email: string, password?: string): Promise<{ token: string; user: User; message: string }> {
-    return this.request<{ token: string; user: User; message: string }>('/auth/login', {
+  public async login(usernameOrEmail: string, password?: string): Promise<{ token: string; user: User; message: string }> {
+    const res = await this.request<{ token: string; user: User; message: string }>('/auth/login', {
       method: 'POST',
-      body: JSON.stringify({ email, password }),
+      body: JSON.stringify({ username: usernameOrEmail, email: usernameOrEmail, password }),
     });
+    if (res.user) {
+      this.setRole(res.user.role, res.user.id);
+      localStorage.setItem('aicte_auth_token', res.token);
+      localStorage.setItem('aicte_logged_user', JSON.stringify(res.user));
+    }
+    return res;
+  }
+
+  public logout(): void {
+    localStorage.removeItem('aicte_auth_token');
+    localStorage.removeItem('aicte_logged_user');
+    localStorage.removeItem('aicte_user_role');
+    localStorage.removeItem('aicte_user_id');
   }
 
   // Health

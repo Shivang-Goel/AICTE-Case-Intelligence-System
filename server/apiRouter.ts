@@ -41,12 +41,48 @@ function getActor(req: Request): { id: string; name: string; role: User['role'];
 // ==========================================
 
 apiRouter.post('/auth/login', (req: Request, res: Response) => {
-  const { email, password } = req.body;
-  const user = dataStore.getUserByEmail(email);
+  const { username, email, password } = req.body;
+  const identifier = (username || email || '').trim().toLowerCase();
 
-  // In demo prototype, passwords are deterministic for standard demo users
+  // Find user by username alias or email
+  let user: User | undefined;
+  const allUsers = dataStore.getUsers();
+
+  if (identifier === 'student' || identifier === 'citizen' || identifier.includes('student') || identifier.includes('aarav')) {
+    user = allUsers.find(u => u.role === 'CITIZEN');
+  } else if (identifier === 'approval' || identifier === 'ab' || identifier.includes('approval')) {
+    user = allUsers.find(u => u.role === 'BUREAU_OFFICER_AB');
+  } else if (identifier === 'grievance' || identifier === 'pgc' || identifier.includes('grievance')) {
+    user = allUsers.find(u => u.role === 'BUREAU_OFFICER_PGC');
+  } else if (identifier === 'vigilance' || identifier === 'armc' || identifier === 'safety' || identifier.includes('vigilance')) {
+    user = allUsers.find(u => u.role === 'BUREAU_OFFICER_ARMC');
+  } else if (identifier === 'admin' || identifier.includes('admin') || identifier.includes('arvind')) {
+    user = allUsers.find(u => u.role === 'ADMIN');
+  } else if (identifier === 'reviewer' || identifier.includes('reviewer')) {
+    user = allUsers.find(u => u.role === 'REVIEWER');
+  } else if (identifier === 'executive' || identifier === 'mgmt' || identifier.includes('management')) {
+    user = allUsers.find(u => u.role === 'READONLY_MANAGEMENT');
+  } else {
+    user = dataStore.getUserByEmail(identifier);
+    if (!user) {
+      user = allUsers.find(u => 
+        u.name.toLowerCase().includes(identifier) || 
+        u.role.toLowerCase() === identifier
+      );
+    }
+  }
+
   if (!user) {
-    return res.status(401).json({ error: 'Invalid credentials. Please use one of the demo accounts.' });
+    return res.status(401).json({ 
+      error: 'Invalid username. Easy usernames: "student", "approval", "grievance", "vigilance", "admin", "reviewer", or "executive".' 
+    });
+  }
+
+  // Password check: demo123 (or admin123)
+  if (password && password !== 'demo123' && password !== 'admin123') {
+    return res.status(401).json({ 
+      error: 'Invalid password. Please enter password: demo123' 
+    });
   }
 
   // Generate demo bearer token
@@ -59,7 +95,7 @@ apiRouter.post('/auth/login', (req: Request, res: Response) => {
     entityType: 'USER',
     entityId: user.id,
     entityReference: user.email,
-    details: `User logged in successfully from demo interface.`,
+    details: `User logged in successfully as ${user.name} (${user.role}).`,
     ipAddress: req.ip || '127.0.0.1',
   });
 
@@ -93,7 +129,7 @@ apiRouter.get('/health', (req: Request, res: Response) => {
   res.json({
     status: 'HEALTHY',
     timestamp: new Date().toISOString(),
-    system: 'AICTE Institution-Centric Case Intelligence & Cross-Bureau Conflict Prevention System',
+    system: 'CaseSetu — AICTE Institution-Centric Case Intelligence & Cross-Bureau Conflict Prevention System',
     problemStatement: 'SIH26264',
     version: '1.0.0-PROTOTYPE',
     database: {
@@ -622,13 +658,27 @@ apiRouter.get('/institutions', (req: Request, res: Response) => {
   const { search, state, riskCategory } = req.query;
 
   if (search && typeof search === 'string') {
-    const q = search.toLowerCase();
-    list = list.filter(i =>
-      i.name.toLowerCase().includes(q) ||
-      i.permanentId.toLowerCase().includes(q) ||
-      i.city.toLowerCase().includes(q) ||
-      i.state.toLowerCase().includes(q)
-    );
+    const rawQ = search.toLowerCase().trim();
+    const cleanQ = rawQ.replace(/\./g, '');
+    const tokens = cleanQ.split(/\s+/).filter(Boolean);
+
+    list = list.filter(i => {
+      const name = i.name.toLowerCase();
+      const cleanName = name.replace(/\./g, '');
+      const pid = i.permanentId.toLowerCase();
+      const city = i.city.toLowerCase();
+      const stateName = i.state.toLowerCase();
+      const id = i.id.toLowerCase();
+      const combined = `${cleanName} ${pid} ${city} ${stateName} ${id}`;
+
+      // Every word token in the query should match the institution
+      return tokens.every(tok => {
+        if (tok === 'itm') return id.includes('itm') || cleanName.includes('technology');
+        if (tok === 'imr') return id.includes('imr') || cleanName.includes('management and research');
+        if (tok === 'gl') return cleanName.includes('gl') || id.includes('glb');
+        return combined.includes(tok);
+      });
+    });
   }
 
   if (state) list = list.filter(i => i.state === state);

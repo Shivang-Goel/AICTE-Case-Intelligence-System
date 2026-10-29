@@ -1,4 +1,4 @@
-# AICTE Institution-Centric Case Intelligence & Cross-Bureau Conflict Prevention System
+# CaseSetu (केस सेतु) — AICTE Institution-Centric Case Intelligence
 **Problem Statement:** SIH26264 | Smart India Hackathon (SIH) 2026  
 **Core Tagline:** Connect Cases. Detect Risks. Prioritize Action.
 
@@ -6,47 +6,79 @@
 
 ## 1. Executive Summary & Purpose
 
-The **AICTE Case Intelligence Platform** addresses a critical operational challenge across technical education regulation: multiple independent statutory bureaus (Approval Bureau, Public Grievance Cell, Anti-Ragging Monitoring Cell, Vigilance Bureau, Legal Cell) often process uncoordinated complaints regarding the same technical institution. 
+**CaseSetu** ("Bridge for Cases") addresses a critical statutory challenge across technical education regulation: multiple independent bureaus within the All India Council for Technical Education (Approval Bureau, Public Grievance Cell, Anti-Ragging Monitoring Cell, and Vigilance Bureau) frequently process uncoordinated, isolated complaints regarding the same technical campus.
 
-Without institutional intelligence, this fragmentation results in:
-1. **Uncoordinated Contradictory Actions:** E.g., Approval Bureau granting Extension of Approval (EoA) while Vigilance is probing forged fire safety certificates.
+Without unified cross-bureau intelligence, this fragmentation results in:
+1. **Contradictory Rulings:** E.g., Approval Bureau granting Extension of Approval (EoA) or additional intake while Vigilance is probing forged faculty records or Anti-Ragging has lodged a police FIR.
 2. **Duplicate Administrative Burden:** Simultaneous redundant inspections without unified context.
 3. **Delayed Life/Safety Interventions:** High-urgency student safety/ragging allegations lost in generic inquiry queues.
 
-This solution provides a **Permanent ID-centric intelligence hub** that semantically clusters complaints, detects cross-bureau conflicts, executes explainable rule-based severity triage, and visualizes the institutional relationship graph.
+**CaseSetu** provides an **AICTE Permanent ID-centric intelligence bridge** that semantically clusters complaints, detects cross-bureau contradictions in real time, executes explainable rule-based severity triage, and visualizes the institutional syndicate relationship network.
 
 ---
 
 ## 2. Key Capabilities & Implemented Modules
 
-1. **Executive Intelligence Dashboard:** Live KPIs, bureau workload radar, intake vs disposal velocity, regional concentration, and real-time cross-bureau conflict warnings.
-2. **Centralized Complaint Registry:** End-to-end CRUD, multi-criteria filtering, sorting, pagination, and real CSV data export.
-3. **Complaint Intake with Real-Time AI Pre-Check:** Live severity estimation, safety keyword flagging, and duplicate detection prior to formal submission.
-4. **Complaint Dossier & Chronological Action Timeline:** Status transitions, bureau transfers with recorded reasons, officer reassignments, action comments, and audit logging.
-5. **Institution 360° Profile:** Holistic view of every technical campus by AICTE Permanent ID, combining historical complaints, open conflicts, risk index, and accreditation details.
-6. **AI Semantic Case Linking Engine:** Hybrid TF-IDF vector similarity + exact Permanent ID matching + category weighting + temporal proximity with natural language rationales. Reviewers can confirm or reject links with audit trails.
-7. **Cross-Bureau Conflict Prevention Centre:** Automated collision detection across active bureaus handling the same institution, providing actionable inter-bureau coordination directives.
-8. **Severity & Urgency Triage Queue:** Life/Student safety allegations (ragging, violence, fire safety) are deterministically escalated to CRITICAL priority with 24–48h statutory inquiry targets, distinct from sentiment. Includes authorized officer override capabilities.
-9. **Interactive Relationship Graph (React Flow):** Graphical topological network visualizing Institutions, Cases, Bureaus, confirmed links, suggested relationships, and conflict collision vectors with zoom/pan and node inspection.
-10. **SLA Deadlines & Workflow Accountability:** Tracks hours remaining, identifies at-risk inquiries (< 48h), flags overdue compliance, and logs bureau transfer histories.
-11. **Immutable Audit Trail:** Append-only log recording actor, timestamp, action type, before/after states, entity references, and IP addresses.
-12. **Guided SIH 2026 Walkthrough Stepper:** Interactive modal walking judges/evaluators through the complete 12-step official demonstration scenario.
+1. **Role-Tailored Operational Desks:**
+   - **Student & Citizen Portal (`student` / `demo123`):** Confidential complaint lodging, anti-ragging emergency SOS, tracking tokens (`AICTE-GRV-2026-XXXX`), and statutory fee refund / document retention protections.
+   - **Approval Bureau Desk (`approval` / `demo123`):** Extension of Approval (EoA) scrutiny, faculty-student cadre ratios (1:15 / 1:20), built-up area compliance, and seat reduction sanctions.
+   - **Public Grievance Desk (`grievance` / `demo123`):** 7-day fee refund orders, 48-hour return of withheld marksheet certificates, and Lok Adalat digital dispute hearings.
+   - **Anti-Ragging & Vigilance War Room (`vigilance` / `demo123`):** 24-hour zero-tolerance protocol, surprise flying squad deployments, and police FIR referrals.
+   - **AI Reviewer & Ombudsman Docket (`reviewer` / `demo123`):** High-confidence semantic linking adjudication, contradiction mediation, and cluster binding.
+   - **Apex Executive Board Desk (`executive` / `demo123`):** Macro national risk telemetry, multi-bureau repeat offender heatmap, and statutory SLA compliance tracking.
+   - **Council Central Intelligence (`admin` / `demo123`):** Unrestricted council-wide oversight across all 7 desks, audit trail, and user management.
+
+2. **AI Semantic Case Linking Engine:**
+   - Sentence Transformers / TF-IDF Vector cosine similarity + exact Permanent ID matching + category weighting + temporal proximity.
+   - Reviewers can confirm or reject links with 1-click and audit logging.
+
+3. **Cross-Bureau Conflict Prevention Centre:**
+   - Automated collision detection across active bureaus handling the same institution, providing actionable inter-bureau coordination directives.
+
+4. **Severity & Urgency Triage Queue:**
+   - Life and student safety allegations (ragging, violence) are deterministically escalated to CRITICAL priority with 24–48h statutory inquiry targets, distinct from sentiment analysis.
+
+5. **Interactive Relationship Graph (@xyflow/react):**
+   - Topological network visualizing Institutions, Cases, Bureaus, confirmed links, suggested relationships, and conflict collision vectors with zoom/pan and node inspection.
 
 ---
 
 ## 3. Technology Stack
 
-- **Frontend:** React 19, TypeScript, Tailwind CSS, React Router, Recharts, @xyflow/react (React Flow), Lucide React.
-- **Backend & API:** Node.js / Express with TypeScript (integrated full-stack on port 3000) + Python FastAPI microservice architecture under `/backend`.
-- **Database & Storage:** PostgreSQL 16 schema + persistent transactional store with transactional atomicity and full audit logging.
-- **AI / NLP Intelligence:** Hybrid TF-IDF and token-space cosine similarity with deterministic heuristic fallback and rule-based urgency triage.
-- **Orchestration:** Docker, Docker Compose, multi-stage Dockerfiles.
+- **Frontend:** React 19, TypeScript, Tailwind CSS, React Router v7, Recharts, @xyflow/react (React Flow), Lucide React.
+- **Backend & API:** Node.js / Express with TypeScript (integrated full-stack on port 3000 + Vercel serverless function under `/api/index.ts`) + Python 3.12 FastAPI microservice under `/backend`.
+- **Database & Storage:** PostgreSQL 16 schema (`backend/models.py`) with persistent transactional store and append-only audit logging.
+- **Deployment Ready:** Vercel (zero-config with `vercel.json` and `/api/index.ts`), Docker, Docker Compose.
 
 ---
 
-## 4. Quick Startup Instructions
+## 4. Deployment Instructions
 
-### Option A: Direct Local Full-Stack Launch (Port 3000)
+### Option A: Deploy on Vercel (Recommended for Cloud Hosting)
+
+CaseSetu is 100% pre-configured for Vercel deployment with serverless backend APIs:
+
+1. **Push repository to GitHub / GitLab:**
+   ```bash
+   git init
+   git add .
+   git commit -m "Initial CaseSetu commit"
+   git push origin main
+   ```
+2. **Import into Vercel:**
+   - Go to [vercel.com](https://vercel.com) and click **"Add New Project"**.
+   - Select your CaseSetu Git repository.
+   - Framework Preset: **Vite** (auto-detected via `vercel.json`).
+   - Build Command: `npm run build` (auto-detected).
+   - Output Directory: `dist` (auto-detected).
+   - Click **Deploy**.
+3. **Done!**
+   - Both the React frontend and all 25+ `/api/v1/*` REST API endpoints run serverless on Vercel automatically via `/api/index.ts`.
+
+---
+
+### Option B: Direct Local Full-Stack Launch (Port 3000)
+
 Runs the unified full-stack application (Express REST backend + Vite frontend):
 
 ```bash
@@ -57,51 +89,50 @@ npm install
 npm run dev
 ```
 
-Visit: **http://localhost:3000** (or preview URL in AI Studio)
+Visit: **http://localhost:3000** (or your preview URL)
 
-### Option B: Docker Compose (Full Container Stack)
+---
+
+### Option C: Docker Compose (Full Container Stack)
+
 Launches PostgreSQL 16 with pgvector + FastAPI Backend + Frontend:
 
 ```bash
 docker compose up --build
 ```
 
-- **Frontend Application:** http://localhost:3000 (or http://localhost:5173)
+- **Frontend Application:** http://localhost:3000
 - **FastAPI Backend:** http://localhost:8000
-- **FastAPI Swagger Docs:** http://localhost:8000/docs
+- **FastAPI Interactive Docs:** http://localhost:8000/docs
 - **PostgreSQL Database:** localhost:5432 (db: `aicte_case_db`, user: `aicte_user`)
 
 ---
 
-## 5. Demo Login Credentials & Roles
+## 5. Quick Demo Credentials & Logins
 
-| Role | Demo Email | Password | Persona & Authority |
+Password for all accounts: **`demo123`**
+
+| Role / Authority | Username | Default Desk | Core Jurisdiction |
 |---|---|---|---|
-| **Administrator** | `admin@aicte-india.org` | `admin123` | Dr. Arvind Sharma — Chief Regulatory Officer (Full clearance) |
-| **Bureau Officer** | `officer.ab@aicte-india.org` | `officer123` | Priya Ramanathan — Senior Approval Officer (Workflow & Transfers) |
-| **Reviewer** | `reviewer@aicte-india.org` | `reviewer123` | Rajesh Deshmukh — Lead Reviewer (AI Link Confirm/Reject & Severity) |
-| **Read-Only Management** | `management@aicte-india.org` | `mgmt123` | Sunita Verma — Executive Board Member (Read-only analytics) |
-
-*Note: You can switch between roles instantly using the top navigation Role Switcher dropdown to test RBAC restrictions.*
+| **Student / Citizen** | `student` | Student Portal | File grievances, track status via token |
+| **Approval Bureau Officer** | `approval` | Approval Bureau | EoA, seat capacity, faculty-cadre norms |
+| **Public Grievance Officer** | `grievance` | Grievance Cell | 7-day fee refunds, marksheet releases |
+| **Anti-Ragging / Vigilance** | `vigilance` | Vigilance War Room | 24h zero-tolerance, flying squads, FIRs |
+| **AI Reviewer / Ombudsman** | `reviewer` | AI Reviewer Docket | Neural case linking, conflict mediation |
+| **Apex Executive Board** | `executive` | Board Telemetry | Macro national KPIs, repeat offender watchlist |
+| **Council Administrator** | `admin` | Council Central Intel | Master switch to all 7 desks & audit trail |
 
 ---
 
-## 6. Official SIH Demonstration Scenario (12 Steps)
+## 6. Real Institutions in Seed Dataset
 
-1. **Role-Based Login:** Open application as Administrator or Bureau Officer.
-2. **Dashboard Overview:** Review live KPIs, bureau distribution, and active conflict alerts.
-3. **Institution 360° Profile:** Navigate to **Apex Institute of Advanced Technology & Research** (`AICTE-1-49281729`) to see multi-bureau cases.
-4. **Complaint Intake:** Open `/intake`, type a complaint (e.g., student ragging or unapproved seats), and observe the real-time AI Pre-Triage card.
-5. **AI Semantic Matching:** Open `/linking` to inspect explainable TF-IDF match scores, keyword evidence, and rationales.
-6. **Cross-Bureau Conflict Prevention:** Open `/conflicts` to observe the three-way collision between Approval, Vigilance, and Anti-Ragging bureaus on Apex Institute.
-7. **Severity Queue:** Open `/severity` to verify student life/safety complaints deterministically marked CRITICAL.
-8. **Review AI Match:** Confirm or reject a candidate case link; verify link reflects in the dossier.
-9. **Case Action Timeline:** Open Case `AICTE-2026-ARMC-0012`, transition status to `INVESTIGATION_ORDERED`, and add an action note.
-10. **Interactive Graph:** Open `/graph` to explore the visual knowledge network with pan, zoom, and node details.
-11. **Analytics & Export:** Open `/analytics`, inspect disposal trends, and download the full CSV export.
-12. **Audit Trail Verification:** Open `/audit-logs` to confirm every action taken was permanently recorded with timestamp and actor identity.
+The platform includes detailed AICTE-approved institutions including:
+1. **G.L. Bajaj Institute of Technology and Management** (`AICTE-1-4648711`, Greater Noida)
+2. **G.L. Bajaj Institute of Management and Research (GLBIMR)** (`AICTE-1-1378121`, Greater Noida)
+3. **G.L. Bajaj Institute of Medical Sciences & Research** (`AICTE-1-3982104`, Mathura)
+4. **G.L. Bajaj Institute of Law** (`AICTE-1-4920198`, Greater Noida)
 
 ---
 
 ## 7. Disclaimer
-This application is a functional prototype built for Smart India Hackathon (SIH 2026) Problem Statement SIH26264. All institution names, complaint texts, and officer identities in the demonstration dataset are synthetic and created solely for regulatory evaluation purposes.
+This application is a functional prototype built for Smart India Hackathon (SIH 2026) Problem Statement SIH26264. All institution records, complaint narratives, and officer credentials in the demo dataset are configured for statutory evaluation purposes.

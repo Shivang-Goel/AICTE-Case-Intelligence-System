@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import {
   Search,
   Bell,
@@ -11,6 +11,9 @@ import {
   Check,
   ExternalLink,
   GraduationCap,
+  Menu,
+  ChevronRight,
+  LogOut,
 } from 'lucide-react';
 import { User, NotificationItem } from '../types';
 import { api } from '../services/api';
@@ -21,6 +24,7 @@ interface Props {
   notifications: NotificationItem[];
   onRefreshNotifications: () => void;
   collapsed: boolean;
+  onToggleSidebar?: () => void;
 }
 
 const ROLES = [
@@ -95,6 +99,7 @@ export const TopNav: React.FC<Props> = ({
   notifications,
   onRefreshNotifications,
   collapsed,
+  onToggleSidebar,
 }) => {
   const [roleDropdownOpen, setRoleDropdownOpen] = useState(false);
   const [notifDropdownOpen, setNotifDropdownOpen] = useState(false);
@@ -109,6 +114,8 @@ export const TopNav: React.FC<Props> = ({
   const roleRef = useRef<HTMLDivElement>(null);
   const notifRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
+  const location = useLocation();
+  const isCitizenPortal = location.pathname.startsWith('/citizen-portal');
 
   // Close dropdowns on outside click
   useEffect(() => {
@@ -174,23 +181,33 @@ export const TopNav: React.FC<Props> = ({
     <header
       className={`fixed top-0 right-0 z-20 h-16 bg-slate-900/95 backdrop-blur border-b border-slate-800 transition-all duration-300 ${
         collapsed ? 'left-20' : 'left-64'
-      } flex items-center justify-between px-6`}
+      } flex items-center justify-between px-4 sm:px-6`}
     >
-      {/* Global Search Bar */}
-      <div ref={searchRef} className="relative w-full max-w-md">
-        <div className="relative">
-          <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
-          <input
-            type="text"
-            value={searchQuery}
-            onChange={e => setSearchQuery(e.target.value)}
-            onFocus={() => {
-              if (searchQuery.length >= 2) setIsSearching(true);
-            }}
-            placeholder="Search AICTE Case ID, Institution, Permanent ID, or Keywords..."
-            className="w-full bg-slate-950/80 border border-slate-700/80 rounded-lg pl-10 pr-4 py-1.5 text-xs text-white placeholder-slate-400 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition"
-          />
-        </div>
+      <div className="flex items-center space-x-2 w-full max-w-md">
+        {onToggleSidebar && (
+          <button
+            onClick={onToggleSidebar}
+            className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition flex-shrink-0"
+            title="Toggle Navigation Menu"
+          >
+            <Menu className="w-5 h-5" />
+          </button>
+        )}
+        {/* Global Search Bar */}
+        <div ref={searchRef} className="relative w-full">
+          <div className="relative">
+            <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={e => setSearchQuery(e.target.value)}
+              onFocus={() => {
+                if (searchQuery.length >= 2) setIsSearching(true);
+              }}
+              placeholder="Search AICTE Case ID, Institution, or Keywords..."
+              className="w-full bg-slate-950/80 border border-slate-700/80 rounded-lg pl-10 pr-4 py-1.5 text-xs text-white placeholder-slate-400 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition"
+            />
+          </div>
 
         {/* Search Results Dropdown */}
         {isSearching && (
@@ -256,26 +273,29 @@ export const TopNav: React.FC<Props> = ({
           </div>
         )}
       </div>
+    </div>
 
       {/* Right Controls */}
       <div className="flex items-center space-x-3">
         {/* Portal Switcher Button */}
         <button
           onClick={() => {
-            if (window.location.pathname.startsWith('/citizen-portal')) {
+            if (isCitizenPortal) {
               navigate('/dashboard');
             } else {
               navigate('/citizen-portal');
             }
           }}
-          className="flex items-center space-x-1.5 px-3 py-1.5 rounded-lg bg-emerald-950/80 hover:bg-emerald-900 border border-emerald-500/50 text-emerald-300 text-xs font-bold transition shadow"
-          title="Switch between Citizen Grievance Portal and Officer Regulatory Hub"
+          className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition shadow ${
+            isCitizenPortal
+              ? 'bg-blue-600 hover:bg-blue-500 text-white shadow-blue-600/30 ring-1 ring-blue-400/50'
+              : 'bg-emerald-600 hover:bg-emerald-500 text-white shadow-emerald-600/30 ring-1 ring-emerald-400/60 animate-pulse'
+          }`}
+          title={isCitizenPortal ? 'Return to AICTE Council Regulatory Hub' : 'Open Student & Citizen Public Grievance Portal'}
         >
-          <GraduationCap className="w-4 h-4 text-emerald-400" />
-          <span>
-            {window.location.pathname.startsWith('/citizen-portal')
-              ? 'Regulator Hub'
-              : 'Student Grievance Portal'}
+          <GraduationCap className="w-4 h-4 flex-shrink-0" />
+          <span className="font-extrabold">
+            {isCitizenPortal ? '🏛️ Council Hub' : '🎓 Student Portal'}
           </span>
         </button>
 
@@ -369,14 +389,35 @@ export const TopNav: React.FC<Props> = ({
           </button>
 
           {roleDropdownOpen && (
-            <div className="absolute right-0 mt-2 w-72 bg-slate-900 border border-slate-700 rounded-xl shadow-2xl p-2 z-50">
-              <div className="px-3 py-2 border-b border-slate-800 mb-1">
+            <div className="absolute right-0 mt-2 w-80 max-h-[calc(100vh-5rem)] overflow-y-auto overscroll-contain custom-nav-scroll bg-slate-900 border border-slate-700 rounded-xl shadow-2xl p-2 z-50">
+              <div className="px-3 py-2 border-b border-slate-800 mb-2 sticky top-0 bg-slate-900/95 backdrop-blur z-10">
                 <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
                   Switch Role / Persona (Demo RBAC)
                 </p>
                 <p className="text-[10px] text-slate-500">
                   Simulate different AICTE authorization levels:
                 </p>
+              </div>
+
+              {/* Direct Quick-Launch for Student Portal */}
+              <div className="p-1 mb-2 bg-emerald-950/60 border border-emerald-500/50 rounded-lg">
+                <button
+                  onClick={() => {
+                    const citizenRole = ROLES.find(r => r.key === 'CITIZEN');
+                    if (citizenRole) {
+                      onRoleChange(citizenRole.key, citizenRole.userId);
+                    }
+                    setRoleDropdownOpen(false);
+                    navigate('/citizen-portal');
+                  }}
+                  className="w-full text-left p-2 rounded-md bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs flex items-center justify-between transition shadow"
+                >
+                  <div className="flex items-center space-x-2">
+                    <GraduationCap className="w-4 h-4 text-emerald-100" />
+                    <span>Launch Student Grievance Portal</span>
+                  </div>
+                  <ChevronRight className="w-4 h-4 text-emerald-200" />
+                </button>
               </div>
 
               <div className="space-y-1">
@@ -409,6 +450,24 @@ export const TopNav: React.FC<Props> = ({
                     </button>
                   );
                 })}
+              </div>
+
+              {/* Sign Out / Go to Login Page */}
+              <div className="pt-2 border-t border-slate-800 mt-2">
+                <button
+                  onClick={() => {
+                    api.logout();
+                    setRoleDropdownOpen(false);
+                    navigate('/login');
+                  }}
+                  className="w-full text-left p-2 rounded-lg text-xs font-bold text-red-400 hover:bg-red-950/40 hover:text-red-300 transition flex items-center justify-between"
+                >
+                  <div className="flex items-center space-x-2">
+                    <LogOut className="w-3.5 h-3.5 text-red-400" />
+                    <span>Sign Out & Go to Login Page</span>
+                  </div>
+                  <ChevronRight className="w-3.5 h-3.5 text-red-400" />
+                </button>
               </div>
             </div>
           )}

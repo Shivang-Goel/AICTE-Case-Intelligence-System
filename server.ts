@@ -28,7 +28,7 @@ async function startServer() {
   // Quick API documentation / overview route
   app.get('/api/docs', (req, res) => {
     res.json({
-      title: 'AICTE Institution-Centric Case Intelligence API',
+      title: 'CaseSetu — AICTE Institution-Centric Case Intelligence API',
       version: 'v1',
       endpoints: [
         'POST /api/v1/auth/login',
